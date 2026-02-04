@@ -25,7 +25,19 @@ SECRET_KEY = 'django-insecure-!k5muf1=pnu^bxdw-#+-9)4jmbgb)4$6cp#l&t@#iyjq3i7^fx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+import os
+
+# Configure ALLOWED_HOSTS for codespace and localhost
+CODESPACE_NAME = os.getenv('CODESPACE_NAME')
+if CODESPACE_NAME:
+    ALLOWED_HOSTS = [
+        f'{CODESPACE_NAME}-8000.app.github.dev',
+        'localhost',
+        '127.0.0.1',
+        '0.0.0.0',
+    ]
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -153,3 +165,10 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+# CSRF Configuration for Codespace
+if CODESPACE_NAME:
+    CSRF_TRUSTED_ORIGINS = [
+        f'https://{CODESPACE_NAME}-8000.app.github.dev',
+        f'https://{CODESPACE_NAME}-3000.app.github.dev',
+    ]
